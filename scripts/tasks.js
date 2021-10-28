@@ -80,7 +80,7 @@ window.addEventListener('load',function(){
     function normalizacionTarea(tarea) {
         const usuario = {
             description: tarea,
-            completed:true
+            completed:false
         }        
         return usuario;
     }
