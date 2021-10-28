@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/solid.css" integrity="sha384-Tv5i09RULyHKMwX0E8wJUqSOaXlyu3SQxORObAI08iUwIalMmN5L6AvlPX2LMoSE" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/fontawesome.css" integrity="sha384-jLKHWM3JRmfMU0A5x5AkjWkw/EYfGUAGagvnfryNV3F9VqM98XiIH7VBGVoxVSc7" crossorigin="anonymous">
+  <title>ToDo</title>
+
+  <!-- ---------------- estilos compartidos de login y signup ---------------- -->
+  <link rel="stylesheet" href="styles/ingreso.css">
+
+  <!-- ---------------------- logica aplicada en register -------------------- -->
+  <!-- <script src="/scripts/utils.js"></script> -->
+  <script src="/scripts/signup.js" defer></script>
+
+</head>
+
+<body>
+
+  <div class="left">
+    <img src="./assets/persona-signup.png" alt="">
+  </div>
+  <div class="right">
+    <form class="formulario" id="formulario">
+      <div class="form-header">
+        <p>To-Do App</p>
+      </div>
+
+      <label class="formulario__grupo " id="grupo__nombre" for="inputNombre">
+        Nombre:
+        <input type="text" id="inputNombre" class="formulario__input" name="nombre">
+        <i class="formulario__validacion-estado fas fa-times-circle"></i>
+      </label>
+
+      
+      <label class="formulario__grupo " id="grupo__apellido" for="inputApellido">
+        Apellido:
+        <input type="text" id="inputApellido" class="formulario__input" name="Apellido">
+        <i class="formulario__validacion-estado fas fa-times-circle"></i>
+      </label>
+
+
+      <label class="formulario__grupo" id="grupo__correo" for="inputEmail">
+        Email:
+        <input type="text" id="inputEmail" class="formulario__input" name="usuario">
+        <i class="formulario__validacion-estado fas fa-times-circle"></i>
+      </label>
+
+
+      <label class="formulario__grupo " id="grupo__password" for="inputPassword">
+        Contraseña:
+        <input type="password" id="inputPassword" class="formulario__input" name="password">
+        <i class="formulario__validacion-estado fas fa-times-circle"></i>
+      </label>
+
+
+      <label class="formulario__grupo " id="grupo__password2" for="inputPassword2">
+        Repetir contraseña:
+        <input type="password" id="inputPassword2" class="formulario__input" name="password2">
+        <i class="formulario__validacion-estado fas fa-times-circle"></i>
+      </label>
+
+      <div class="formulario__mensaje" id="formulario__mensaje">
+				<p><i class="fas fa-exclamation-triangle"></i> <b>Error:</b> Existen campos imcompletos o que no cumplen con lo establecido. </p>
+			</div>
+
+      <button>Crear Cuenta</button>
+
+    </form>
+    <div class="ingresarA">
+      <a href="index.html">¿Ya tiene una cuenta? Ingrese aquí</a>
+    </div>
+  </div>
+
+</body>
+
+</html>

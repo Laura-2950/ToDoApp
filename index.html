@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/solid.css" integrity="sha384-Tv5i09RULyHKMwX0E8wJUqSOaXlyu3SQxORObAI08iUwIalMmN5L6AvlPX2LMoSE" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/fontawesome.css" integrity="sha384-jLKHWM3JRmfMU0A5x5AkjWkw/EYfGUAGagvnfryNV3F9VqM98XiIH7VBGVoxVSc7" crossorigin="anonymous">
+  <title>ToDo</title>
+
+  <!-- ---------------- estilos compartidos de login y signup ---------------- -->
+  <link rel="stylesheet" href="styles/ingreso.css">
+
+  <!-- ---------------------- logica aplicada en login ----------------------- -->
+  
+  <script src="/scripts/login.js" defer></script>
+
+</head>
+
+<body>
+  <div class="left">
+    <img src="./assets/persona-login.png" alt="">
+  </div>
+
+  <div class="right">
+    <form class="formulario" id="formulario">
+      <div class="form-header">
+        <p>To-Do App</p>
+      </div>
+      <h1>Ingresar</h1>
+
+
+      <label class="formulario__grupo" id="grupo__correo" for="inputEmail">
+        Email:
+        <input id="inputEmail" class="formulario__input" type="text" name="usuario">
+        <i class="formulario__validacion-estado fas fa-times-circle"></i>
+      </label>
+
+
+      <label class="formulario__grupo " id="grupo__password" for="inputPassword">
+        Contraseña:
+        <input id="inputPassword" class="formulario__input" type="password" name="password">
+        <i class="formulario__validacion-estado fas fa-times-circle"></i>
+      </label>
+
+
+      <label class="formulario__grupo" id="grupo__mantenerInicioSesion" >
+        Manteren Sesión
+        <input class="formulario__checkbox" type="checkbox" name="mantenerInicioSesion" id="mantenerInicioSesion">
+      </label>
+      <div class="formulario__mensaje" id="formulario__mensaje">
+				<p><i class="fas fa-exclamation-triangle"></i> <b>Error:</b> El usuario ingresado no se encuentra registado. </p>
+			</div>
+
+
+      <button type="submit">Ingresar</button>
+
+    </form>
+    <div class="ingresarA">
+      <a href="signup.html">¿No tiene una cuenta? Regístrese aquí</a>
+    </div>
+  </div>
+
+</body>
+
+</html>
