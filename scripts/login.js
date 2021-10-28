@@ -108,7 +108,7 @@ function checksession(){
                         // accionar pensando en que el resultado es un usuario y contraseña correctos
                         /* localStorage.setItem('token', data.jwt); */
                         //redijo a la pantalla de tareas
-                        location.href = '../mis-tareas.html';
+                        location.href = './mis-tareas.html';
                     }else{
                         document.querySelector('#formulario__mensaje').classList.add('formulario__mensaje-activo')
                     }
