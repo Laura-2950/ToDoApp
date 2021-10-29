@@ -99,7 +99,6 @@ function checksession(){
                     .then( respuesta => respuesta.json())
                     .then( data => {
                         if(data.jwt){        
-                                console.log(infocheck);
                                 if (infocheck) {
                                     localStorage.setItem('token', data.jwt)
                                 }else{                        

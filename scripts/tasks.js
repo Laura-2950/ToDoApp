@@ -52,8 +52,6 @@ window.addEventListener('load',function(){
         fetch(url, settings)
         .then( respuesta => respuesta.json())
         .then( dataUsuario => {
-            console.log(dataUsuario);
-            console.log(dataUsuario.firstName);
             divAvatar.innerText=dataUsuario.firstName;
             
         })        
@@ -69,7 +67,6 @@ window.addEventListener('load',function(){
         fetch(url, settings)
         .then( respuesta => respuesta.json())
         .then( dataTareas => {
-            console.log(dataTareas);
             const arrayTareas=dataTareas
             listaTareaPendientes.innerHTML = "";
             listaTareaTeminadas.innerHTML = "";
@@ -78,7 +75,7 @@ window.addEventListener('load',function(){
                 const templateTareasFinalizadas=`<li class="tarea">
                 <div class="done"></div>
                 <div class="descripcion">
-                  <p class="nombreTerminada">${element.description}</p>
+                  <p class="nombre">${element.description}</p>
                   <div>
                   <button><i id="${element.id}" class="fas fa-undo-alt change"></i></button>
                   <button><i id="${element.id}" class="far fa-trash-alt"></i></button>
@@ -134,18 +131,14 @@ window.addEventListener('load',function(){
     //esccucho el evento click del area de tareas TERMINADAS para borar o modificar
     listaTareaTeminadas.addEventListener('click', function (e) {
         if (e.target.classList.contains('fa-trash-alt') ) {
-            console.log(e.target.id);
             const id= e.target.id
             const apiUrlDelete=`${apiUrl}/tasks/${id}`
             borrarTarea(apiUrlDelete,token)
         }
         if (e.target.classList.contains('fa-undo-alt') ) {
-            console.log('hiche clic para editar');
-            console.log(e.target.id);
-            console.log(document.querySelector('.nombreTerminada').innerText );
             const id= e.target.id
             const apiUrlDelete=`${apiUrl}/tasks/${id}`
-            const tareaActualizada=normalizacionTareaTerminada(document.querySelector('.nombreTerminada').innerText)
+            const tareaActualizada=normalizacionTareaTerminada(e.path[3].querySelector('.nombre').innerText)
             actualizarTarea(apiUrlDelete,token,tareaActualizada)
         }        
     })
@@ -153,10 +146,7 @@ window.addEventListener('load',function(){
 
     listaTareaPendientes.addEventListener('click', function (e) {
         console.log('click en pendiente');
-        if (e.target.classList.contains('not-done') ) {
-            console.log('hiche clic en not-done');
-            console.log(e.target.id);
-            console.log(e.path[1].querySelector('.nombre').innerText);            
+        if (e.target.classList.contains('not-done') ) {            
             const id= e.target.id
             const apiUrlDelete=`${apiUrl}/tasks/${id}`
             const tareaActualizada=normalizacionTareaPendiente(e.path[1].querySelector('.nombre').innerText)
@@ -183,16 +173,14 @@ window.addEventListener('load',function(){
         const usuario = {
             description: tarea,
             completed:false
-        }
-        console.log(usuario);        
+        }        
         return usuario;
     }
     function normalizacionTareaPendiente(tarea) {
         const usuario = {
             description: tarea,
             completed:true
-        }
-        console.log(usuario);        
+        }     
         return usuario;
     }
     
