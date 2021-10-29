@@ -1,7 +1,7 @@
 checksession();
 function checksession(){    
     if (localStorage.getItem('token')) {
-        location.href = '/mis-tareas.html';            
+        location.href = './mis-tareas.html';            
     }
     else{
             window.addEventListener('load', function(){

@@ -1,18 +1,47 @@
+
+
 window.addEventListener('load',function(){
     const apiUrl = 'https://ctd-todo-api.herokuapp.com/v1'
     const token= this.localStorage.getItem('token')?localStorage.getItem('token'):sessionStorage.getItem('token');    
     const divAvatar=document.querySelector('.user-info p'); 
     const fomulario=document.querySelector('.nueva-tarea');
-    const divTareaPendientes= document.querySelector('.tareas-pendientes #skeleton')
-    const divTareaTeminadas= document.querySelector('.tareas-terminadas #skeleton')
+    const listaTareaPendientes= document.querySelector('.tareas-pendientes')
+    const listaTareaTeminadas= document.querySelector('.tareas-terminadas')
     const btnCerrarSesion=document.querySelector('#closeApp')
 
-    console.log();
+    
+    // escuchamos el click para cerrar sesion
+    btnCerrarSesion.addEventListener('click',function(e){        
+        if(confirm("¿Desea cerrar sesión?")){
+            localStorage.clear();
+            sessionStorage.clear();
+            location.replace('./index.html');
+        }
+    })
+    
+    
+    /* ------------------- acciones apenas arranca nuestra app ------------------ */
+    obtenerDatosUsuario(`${apiUrl}/users/getMe`,token);
+    obtenerTareas (`${apiUrl}/tasks`,token);    
+    
+    fomulario.addEventListener('submit',function(e){
+        e.preventDefault();
+        const nuevaTarea=document.querySelector('#nuevaTarea');
+        const resultadoValidacion= validarTarea(nuevaTarea.value)
+        const tareaLista = resultadoValidacion?  normalizacionTarea(nuevaTarea.value) : alert('Ingrese un detalle para la tarrea que desea agregar.');
+        crearTareas(`${apiUrl}/tasks`,token, tareaLista);
+        obtenerTareas (`${apiUrl}/tasks`,token);
+        fomulario.reset();
+    })
 
+        /* -------------------------------------------------------------------------- */
+    /*                                  funciones                                 */
+    /* -------------------------------------------------------------------------- */
 
-    obtenerDatosUsuario(`${apiUrl}/users/getMe`,token);    
+    
 
-
+    /* ---------------------- Pintar las tareas en pantalla --------------------- */
+    
     function obtenerDatosUsuario(url, autorizacion){
         const settings = {
             method: 'GET',
@@ -26,9 +55,7 @@ window.addEventListener('load',function(){
             console.log(dataUsuario);
             console.log(dataUsuario.firstName);
             divAvatar.innerText=dataUsuario.firstName;
-            if (dataUsuario.firstName) {
-                obtenerTareas (`${apiUrl}/tasks`,token);
-            }
+            
         })        
     }
 
@@ -44,34 +71,37 @@ window.addEventListener('load',function(){
         .then( dataTareas => {
             console.log(dataTareas);
             const arrayTareas=dataTareas
+            listaTareaPendientes.innerHTML = "";
+            listaTareaTeminadas.innerHTML = "";
             for (let i = 0; i < arrayTareas.length; i++) {
                 const element = arrayTareas[i];
-                const template=`<li class="tarea">
-                <div class="not-done">${element.completed}</div>
+                const templateTareasFinalizadas=`<li class="tarea">
+                <div class="done"></div>
+                <div class="descripcion">
+                  <p class="nombreTerminada">${element.description}</p>
+                  <div>
+                  <button><i id="${element.id}" class="fas fa-undo-alt change"></i></button>
+                  <button><i id="${element.id}" class="far fa-trash-alt"></i></button>
+                  </div>
+                </div>
+              </li>`;
+              const templateTareasPendientes=`<li class="tarea">
+                <div class="not-done change" id="${element.id}"></div>
                 <div class="descripcion">
                   <p class="nombre">${element.description}</p>
-                  <p class="timestamp">Creada: ${element.createdAt}</p>
+                  <p class="timestamp"><i class="far fa-calendar-alt"></i> ${element.createdAt}</p>
                 </div>
               </li>`;
                 if (element.completed== false) {
-                    divTareaPendientes.innerHTML+=template;                    
+                    listaTareaPendientes.innerHTML+=templateTareasPendientes;                    
                 }else{
-                    divTareaTeminadas.innerHTML+=template;
+                    listaTareaTeminadas.innerHTML+=templateTareasFinalizadas;
                 }
             }     
         })
-
     }
 
 
-    fomulario.addEventListener('submit',function(e){
-        e.preventDefault();
-        const nuevaTarea=document.querySelector('#nuevaTarea');
-        const resultadoValidacion= validarTarea(nuevaTarea.value)
-        const tareaLista = resultadoValidacion?  normalizacionTarea(nuevaTarea.value) : alert('Ingrese un detalle para la tarrea que desea agregar.');
-        crearTareas(`${apiUrl}/tasks`,token, tareaLista);
-        fomulario.reset();
-    })
 
     function validarTarea(tarea) {
         return tarea===''?false:true;
@@ -98,16 +128,90 @@ window.addEventListener('load',function(){
         .then( respuesta => respuesta.json())
         .then( dataTarea => {
             console.log(dataTarea);
-            location.reload();    
+            obtenerTareas (`${apiUrl}/tasks`,token)   
+        })
+    }
+    //esccucho el evento click del area de tareas TERMINADAS para borar o modificar
+    listaTareaTeminadas.addEventListener('click', function (e) {
+        if (e.target.classList.contains('fa-trash-alt') ) {
+            console.log(e.target.id);
+            const id= e.target.id
+            const apiUrlDelete=`${apiUrl}/tasks/${id}`
+            borrarTarea(apiUrlDelete,token)
+        }
+        if (e.target.classList.contains('fa-undo-alt') ) {
+            console.log('hiche clic para editar');
+            console.log(e.target.id);
+            console.log(document.querySelector('.nombreTerminada').innerText );
+            const id= e.target.id
+            const apiUrlDelete=`${apiUrl}/tasks/${id}`
+            const tareaActualizada=normalizacionTareaTerminada(document.querySelector('.nombreTerminada').innerText)
+            actualizarTarea(apiUrlDelete,token,tareaActualizada)
+        }        
+    })
+
+
+    listaTareaPendientes.addEventListener('click', function (e) {
+        console.log('click en pendiente');
+        if (e.target.classList.contains('not-done') ) {
+            console.log('hiche clic en not-done');
+            console.log(e.target.id);
+            console.log(e.path[1].querySelector('.nombre').innerText);            
+            const id= e.target.id
+            const apiUrlDelete=`${apiUrl}/tasks/${id}`
+            const tareaActualizada=normalizacionTareaPendiente(e.path[1].querySelector('.nombre').innerText)
+            actualizarTarea(apiUrlDelete,token,tareaActualizada)
+        }        
+    })
+
+    function borrarTarea(url,autorizacion) {
+        const settings = {
+            method: 'DELETE',
+            headers: {
+                'authorization': autorizacion,
+            },
+        }        
+        fetch(url, settings)
+        .then( respuesta => respuesta.json())
+        .then( dataTarea => {
+            console.log(dataTarea);
+            obtenerTareas (`${apiUrl}/tasks`,token);    
         })
     }
 
-    btnCerrarSesion.addEventListener('click',function(e){        
-        e.preventDefault();
-        sessionStorage.getItem('token')!=undefined?sessionStorage.removeItem('token'):localStorage.removeItem('token');
-        location.href = '/index.html';
-    })
+    function normalizacionTareaTerminada(tarea) {
+        const usuario = {
+            description: tarea,
+            completed:false
+        }
+        console.log(usuario);        
+        return usuario;
+    }
+    function normalizacionTareaPendiente(tarea) {
+        const usuario = {
+            description: tarea,
+            completed:true
+        }
+        console.log(usuario);        
+        return usuario;
+    }
     
+    function actualizarTarea(url,autorizacion,payload) {
+        const settings = {
+            method: 'PUT',
+            headers: {
+                'authorization': autorizacion,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        }        
+        fetch(url, settings)
+        .then( respuesta => respuesta.json())
+        .then( dataTarea => {
+            console.log(dataTarea);
+            obtenerTareas (`${apiUrl}/tasks`,token);    
+        })
+    }
 
 
 
